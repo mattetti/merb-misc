@@ -96,6 +96,32 @@ RUBY
       "#{failing_post_spec}\n#{match}"
     end
 
+    add_delete_spec
+  end
+  
+  def add_delete_spec
+    spec_file = "#{app_path}/spec/requests/articles_spec.rb"
+    spec = <<-RUBY
+ describe "a succesful DELETE" do
+   before(:each) do
+     Article.all.destroy!
+     request(resource(:articles), :method => "POST", 
+       :params => { :article => {:title => 'intro', :author => 'Matt', :created_at => '2008-10-19 02:26:33' }})
+     @response = request(resource(:articles), :method => "DELETE", :params => { :id => Article.first.id})
+   end
+
+   it "should redirect to the index" do
+     @response.body.should include("Articles controller, index action")
+     @response.should redirect_to(resource(:articles))
+   end
+   
+ end
+RUBY
+
+    gsub_file spec_file, /(end\n\n)$/i do |match|
+      "#{spec}\n#{match}"
+    end
+    
   end
   
   def edit_index_view
