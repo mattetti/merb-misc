@@ -1,11 +1,22 @@
 #!/usr/bin/env ruby
 
+module Step
+  
+  def step(method_name)
+    send(method_name)
+  end
+  
+end
+
+
 class TestApp < Thor 
+  
+  include Step
 
   desc "generate APP_NAME", "generate a test apps" 
   def generate(name='test-app')
     @app_name = name
-    remove_old_generated_app
+    step(:remove_old_generated_app)
     generate_app
     generate_article_resource
     migrate_db
@@ -31,6 +42,8 @@ class TestApp < Thor
   end
   
   def remove_old_generated_app
+    print " > cleaning up\n"
+    
     Dir["#{@app_name}"].each { |old| FileUtils.rm_rf old } 
   end
   
@@ -40,6 +53,8 @@ class TestApp < Thor
   end
   
   def generate_article_resource
+    print " > generating an article resource\n"
+    
     Dir.chdir(app_path) do
       `merb-gen resource article title:String,author:String,created_at:DateTime`
     end
@@ -107,11 +122,10 @@ RUBY
      Article.all.destroy!
      request(resource(:articles), :method => "POST", 
        :params => { :article => {:title => 'intro', :author => 'Matt', :created_at => '2008-10-19 02:26:33' }})
-     @response = request(resource(:articles), :method => "DELETE", :params => { :id => Article.first.id})
+     @response = request(resource(Article.first), :method => "DELETE")
    end
 
    it "should redirect to the index" do
-     @response.body.should include("Articles controller, index action")
      @response.should redirect_to(resource(:articles))
    end
    
