@@ -53,5 +53,23 @@ class TestApp < Thor
     step :edit_layout
     step :run_app_specs
   end
+  
+  desc "auth APP_NAME", "generate an auth app"
+  def auth(app_name="auth-app")
+    Step.app_name = app_name
+    step :remove_old_generated_app
+    step :generate_app
+    step :generate_article_resource
+    step :migrate_db
+    step :edit_request_specs
+    step :edit_index_view
+    step :make_specs_not_pending
+    step :add_model_validation
+    step :add_model_specs
+    step :edit_layout
+    step :ensure_authenticated
+    step :run_app_specs
+    
+  end
 
 end
