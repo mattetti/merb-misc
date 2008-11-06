@@ -96,5 +96,4 @@ class App < Thor
     step :run_app_specs
   end  
 
-
 end
