@@ -36,7 +36,7 @@ module Step
     @count += 1
   end
   
-  # replace part of a file based on a regexp
+  # replaces part of a file based on a regexp
   #
   def gsub_file(destination, regexp, *args, &block)
     path = destination
