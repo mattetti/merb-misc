@@ -95,12 +95,12 @@ class App < Thor
     step :add_model_validation
     step :add_model_specs
     step :edit_layout
-    step :authenticate_articles_route
-    step :run_app_specs
-    step :authenticated_articles_route_spec
-    step :run_app_specs
+    # step :authenticate_articles_route
+    # step :run_app_specs
+    # step :authenticated_articles_route_spec
+    # step :run_app_specs
     step :bundling_merb
-    step :run_app_specs
+    step :run_bundled_app_specs
   end  
 
 end

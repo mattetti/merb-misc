@@ -4,25 +4,25 @@ module Step
     
         spec_file = "#{path}/spec/requests/articles_spec.rb"
         print " > editing requests spec #{spec_file}\n"
-
-        old_given = <<-RUBY 
-        given "a article exists" do
-          Article.all.destroy!
-          request(resource(:articles), :method => "POST", 
-            :params => { :article => {:title => 'intro', :author => 'Matt', :created_at => '2008-11-07 10:07:12' }})
-        end
-    RUBY
+        old_given = <<RUBY
+  given "a article exists" do
+    Article.all.destroy!
+    request(resource(:articles), :method => "POST", 
+      :params => { :article => { :id => nil }})
+  end
+RUBY
     
         gsub_file spec_file, /(#{Regexp.escape(old_given)})/mi do |match| 
           <<-RUBY    
               given "a article exists" do
                 Article.all.destroy!
-                request(resource(:articles), :method => "POST", 
-                  :params => { :article => {:title => 'intro', :author => 'Matt', :created_at => '2008-11-07 10:07:12' }})
                 User.all.detroy!
                 u = User.new(:login => "mattetti")
                 u.password = u.password_confirmation = "sekrit"
                 u.save
+                request("/login", :method => "put", :params => {"login" => "mattetti", "password" => "sekrit"})
+                request(resource(:articles), :method => "POST", 
+                  :params => { :article => {:title => 'intro', :author => 'Matt', :created_at => '2008-11-07 10:07:12' }})
               end
           RUBY
         end
