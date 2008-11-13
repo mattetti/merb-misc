@@ -19,11 +19,11 @@ module Step
     end
 
     it "should re render the new action" do
-      @response.body.include?("Articles controller, new action").should be_true
+      @response.body.should include?("Articles controller, new action")
     end
 
     it "should have an error message" do
-      @response.body.include?("Article failed to be created").should be_true
+      @response.body.include?("Article failed to be created")
     end
   end
   RUBY

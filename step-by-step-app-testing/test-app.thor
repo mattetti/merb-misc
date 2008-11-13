@@ -69,31 +69,38 @@ module Step
       `git commit -a -m "#{step_name}"`
     end
   end
+  
+  # Loads steps
+  # path the name of the folder containing the steps
+  #
+  def load_steps(path="shared-steps")
+    steps = Dir["#{Dir.pwd}/#{path}/**.rb"]
+    steps.each { |file| require file }
+  end
 
 end
 
 
 class App < Thor 
   
-  steps = Dir["#{Dir.pwd}/steps/**.rb"]
-  puts "loading #{steps.size} steps"
-  steps.each { |file| require file }
-  
   include Step
 
-  desc "generate APP_NAME", "generate a test apps" 
+  desc "generate APP_NAME", "generate a test app" 
   def generate(app_name='my-first-app')
     Step.app_name = app_name
+    load_steps('shared-steps')
+    load_steps('steps')
     
     step :preinit_remove_old_generated_app
     step :generate_app_and_git_init
     step :generate_article_resource
     step :migrate_db
+    step :add_model_validation
+    step :add_model_specs
+    
     step :edit_request_specs
     step :edit_index_view
     step :make_specs_not_pending
-    step :add_model_validation
-    step :add_model_specs
     step :edit_layout
     # step :authenticate_articles_route
     # step :run_app_specs
@@ -102,5 +109,41 @@ class App < Thor
     step :bundling_merb
     step :run_bundled_app_specs
   end  
+  
+  desc "generate_very_flat APP_NAME", "generate a very flat test app" 
+  def generate_very_flat(app_name="very-flat-app")
+    load_steps('shared-steps')
+    load_steps('very-flat-steps')
+    Step.app_name = app_name
+    
+    step :preinit_remove_old_generated_app
+    step :generate_app_and_git_init
+    step :run_app_specs
+    
+  end
 
+  desc "generate_flat APP_NAME", "generate a flat test app" 
+  def generate_flat(app_name="flat-app")
+    load_steps('shared-steps')
+    load_steps('flat-steps')
+    Step.app_name = app_name
+    
+    step :preinit_remove_old_generated_app
+    step :generate_app_and_git_init
+    step :run_app_specs
+    
+  end
+  
+  desc "generate_core APP_NAME", "generate a core test app" 
+  def generate_core(app_name="core-app")
+    load_steps('shared-steps')
+    load_steps('core-steps')
+    Step.app_name = app_name
+    
+    step :preinit_remove_old_generated_app
+    step :generate_app_and_git_init
+    step :run_app_specs
+    
+  end
+  
 end
