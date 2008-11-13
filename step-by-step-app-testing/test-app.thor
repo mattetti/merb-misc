@@ -146,4 +146,15 @@ class App < Thor
     
   end
   
+  desc "generate_slice SLICE_NAME", "generate a test slice" 
+  def generate_slice(app_name="slice-app")
+    load_steps('shared-steps')
+    load_steps('slice-steps')
+    Step.app_name = app_name
+    
+    step :preinit_remove_old_generated_app
+    step :generate_app_and_git_init
+    step :run_app_specs
+    
+  end
 end
