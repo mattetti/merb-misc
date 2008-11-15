@@ -19,7 +19,7 @@ module Step
     end
 
     it "should re render the new action" do
-      @response.body.should include?("Articles controller, new action")
+      @response.body.should include("Articles controller, new action")
     end
 
     it "should have an error message" do
