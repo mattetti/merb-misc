@@ -46,6 +46,34 @@ module Step
     File.open(path, 'wb') { |file| file.write(content) }
   end
   
+  # inserts some code at the top a file
+  def prepend_to_file(path, text_to_add)
+    add_content_to_file(path, text_to_add, :top)
+  end
+  
+  # inserts some code at the bottom of a file
+  def append_to_file(path, text_to_add)
+    add_content_to_file(path, text_to_add, :bottom)
+  end
+  
+  # Adds content to a file
+  # params:
+  # path: to the file to edit
+  # text_to_add: I bet you can figure this one on your own
+  # position: symbol or string, choose between :top and :bottom
+  #
+  def add_content_to_file(path, text_to_add, position)
+    case position.to_s
+    when "top"
+      content = text_to_add + File.read(path)
+    when "bottom"
+      content = File.read(path) + text_to_add
+    else
+      raise "Please specify the position to insert your content (:top or :bottom)"
+    end
+    File.open(path, 'wb') { |file| file.write(content) }
+  end
+  
   # initiate a local git repo
   #
   def git_init
@@ -81,12 +109,20 @@ module Step
 end
 
 
+
+
+############################################################################################################
+#
+# =>  APP Generators
+#
+############################################################################################################
+
 class App < Thor 
   
   include Step
 
-  desc "generate APP_NAME", "generate a test app" 
-  def generate(app_name='my-first-app')
+  desc "generate APP_NAME bundling", "generate a test app, the second param sets bundling testing or not" 
+  def generate(app_name='my-first-app', bundling=false)
     Step.app_name = app_name
     load_steps('shared-steps')
     load_steps('steps')
@@ -102,12 +138,13 @@ class App < Thor
     step :edit_index_view
     step :make_specs_not_pending
     step :edit_layout
-    # step :authenticate_articles_route
-    # step :run_app_specs
-    # step :authenticated_articles_route_spec
-    # step :run_app_specs
-    step :bundling_merb
-    step :run_bundled_app_specs
+    step :authenticate_articles_route
+    step :authenticated_articles_route_spec
+    step :run_app_specs
+    if bundling
+      step :bundling_merb
+      step :run_bundled_app_specs
+    end
   end  
   
   desc "generate_very_flat APP_NAME", "generate a very flat test app" 

@@ -7,7 +7,7 @@ module Step
       <<-RUBY
 authenticate do
     #{sentinel}  
-end
+  end
 RUBY
     end
   end
