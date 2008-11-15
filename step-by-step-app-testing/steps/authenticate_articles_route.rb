@@ -8,6 +8,7 @@ module Step
 authenticate do
     #{sentinel}  
   end
+  resource :users
 RUBY
     end
   end

@@ -44,17 +44,8 @@ RUBY
 Merb::Test.add_helpers do
 
   def create_default_user
-    if User.first(:login => "krusty").nil?
-      request(resource(:users), {
-        :method => "POST",
-        :params => {
-          :user => {
-            :login => "krusty",
-            :password => "klown",
-            :password_confirmation => "klown"
-          }
-        }
-      })
+    unless User.first(:login => "krusty")
+      User.create(:login => "krusty", :password => "klown", :password_confirmation => "klown") or raise "can't create user'"
     end
   end
   
