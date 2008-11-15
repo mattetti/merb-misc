@@ -23,7 +23,7 @@ module Step
     end
 
     it "should have an error message" do
-      @response.body.include?("Article failed to be created")
+      @response.body.should include("Article failed to be created")
     end
   end
   RUBY
