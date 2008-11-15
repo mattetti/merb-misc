@@ -60,7 +60,7 @@ Merb::Test.add_helpers do
   
   def login
     create_default_user
-    @response = request("/login", {
+    request("/login", {
       :method => "PUT",
       :params => {
         :login => "krusty",
