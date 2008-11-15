@@ -16,18 +16,26 @@ module Step
       <<-RUBY    
 given "a article exists" do
   Article.all.destroy!
-  User.all.detroy!
-  u = User.new(:login => "mattetti")
-  u.password = u.password_confirmation = "sekrit"
-  u.save
-  request("/login", :method => "put", :params => {"login" => "mattetti", "password" => "sekrit"})
+  login
   request(resource(:articles), :method => "POST", 
     :params => { :article => {:title => 'intro', :author => 'Matt', :created_at => '2008-11-07 10:07:12' }})
 end
       RUBY
   end
-    
+  
+    add_login_to_before_filter
     add_login_spec_helpers
+  end
+  
+  def add_login_to_before_filter
+    matcher = /before\(:each\) do\n*(.*?end)/mi
+    gsub_file "#{path}/spec/requests/articles_spec.rb", matcher do |matched_str| 
+<<-RUBY
+before(:each) do
+      login
+      #{matched_str.match(matcher).captures.first.strip}
+RUBY
+    end
   end
   
   def add_login_spec_helpers
