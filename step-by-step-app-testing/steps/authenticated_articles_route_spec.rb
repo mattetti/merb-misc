@@ -59,6 +59,7 @@ Merb::Test.add_helpers do
   end
   
   def login
+    create_default_user
     @response = request("/login", {
       :method => "PUT",
       :params => {
