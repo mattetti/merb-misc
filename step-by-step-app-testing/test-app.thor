@@ -103,7 +103,9 @@ module Step
   #
   def load_steps(path="shared-steps")
     steps = Dir["#{Dir.pwd}/#{path}/**.rb"]
-    steps.each { |file| require file }
+    steps.each do |file| 
+      ::Thor::Tasks.class_eval(File.read(file))
+    end
   end
 
 end
